@@ -8,6 +8,7 @@ Having python3 just install a game (the recommended way is showcased below)
 
 ```bash
 python3 -m venv .venv
+source .venv/bin/activate
 pip3 install .
 ```
 
@@ -30,5 +31,5 @@ pokebash
 ```
 
 ### author
-
+Adam Ziółkowski
 

@@ -8,6 +8,8 @@ def delay_print(s):
     print("\n")
     time.sleep(1.5)
 
+def capitalize_first_word(words: str) -> str:
+    return words[0].upper() + words[1:]
 
 class bcolors:
     HEADER = '\033[95m'

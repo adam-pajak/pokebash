@@ -1,29 +1,28 @@
 import time
-from game.console import green, red, delay_print
+from game.console import green, red, delay_print, capitalize_first_word
 from game.pokemon import Pokemon, Trainer, calculate_damage, Move, calculate_effectiveness, move_hits
-
 
 def show_pokemon_stats(pokemon: Pokemon):
     print(pokemon.name)
     print(f"Types: {pokemon.types}")
     print("Moves: ")
     for move in pokemon.moves:
-        print(f"- {move.name}, power: {move.power}, type: {move.type}")
+        print(f"- {move.name}, power: {move.power}, type: {move.type}, accuracy: {move.accuracy}")
     print(f"Level: 100, Attack: {pokemon.attack}, Defense: {pokemon.defense}, Speed: {pokemon.speed}, Health: {pokemon.health}")
 
 
 def attack(attacker: Pokemon, defender: Pokemon, move: Move) -> bool:
-    delay_print(f"{attacker.name} used {move.name}!")
+    delay_print(f"{capitalize_first_word(attacker.text)} used {move.name}!")
     if move_hits(move.accuracy):
         damage = calculate_damage(attacker, defender, move)
         if calculate_effectiveness(move.type, defender.types) > 1.0:
             delay_print("It's super effective!")
         elif calculate_effectiveness(move.type, defender.types) < 1.0:
             delay_print("It's not very effective!")
-        delay_print(f"{move.name} caused {damage} damage to {defender.name}")
+        delay_print(f"{move.name} caused {damage} damage to {defender.text}!")
         defender.health -= damage
     else:
-        delay_print(f"{defender.name} avoided the attack!")
+        delay_print(f"{capitalize_first_word(defender.text)} avoided the attack!")
     return defender.health > 0
 
 
@@ -31,6 +30,8 @@ class Battle:
     def __init__(self, player: Trainer, computer: Trainer):
         self.player = player
         self.computer = computer
+        self.player.pokemon.text = f"{self.player.pokemon.name}"
+        self.computer.pokemon.text = f"enemy {self.computer.pokemon.name}"
         self.first, self.second = self.player, self.computer
         if self.player.pokemon.speed < self.computer.pokemon.speed:
             self.first, self.second = self.computer, self.player
@@ -51,15 +52,15 @@ class Battle:
         while self.play_round():
             pass
         if self.player.pokemon.health > 0:
-            delay_print(f"{self.computer.pokemon.name} fainted!")
+            delay_print(f"{capitalize_first_word(self.computer.pokemon.text)} fainted!")
             green("You defeated your rival!")
         else:
-            delay_print(f"{self.player.pokemon.name} fainted!")
+            delay_print(f"{self.player.pokemon.text} fainted!")
             red("You lost to your rival!")
 
     def play_round(self) -> bool:
-        green(f"{self.player.pokemon.name} ♥ {self.player.pokemon.health}")
-        green(f"{self.computer.pokemon.name} ♥ {self.computer.pokemon.health}")
+        green(f"Your {self.player.pokemon.name} ♥ {self.player.pokemon.health}")
+        green(f"Opponent's {self.computer.pokemon.name} ♥ {self.computer.pokemon.health}")
 
         first_move = self.first.choose_move()
         second_move = self.second.choose_move()

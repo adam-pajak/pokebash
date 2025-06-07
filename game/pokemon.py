@@ -45,6 +45,7 @@ class Move:
         self.type = type
 
 class Pokemon:
+    text: str
     def __init__(self, name: str, types: List[str], moves: List[Move], attack: int, defense: int, health: int, speed: int):
         self.name = name
         self.types = types
